@@ -2,9 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const configPassport = require('./config/passport-jwt-config');
-const configDatabase = require('./config/database');
 const morgan = require('morgan');
-const mongoose = require('mongoose');
+const database = require('./middleware/mongoose-database');
 
 const app = express();
 
@@ -14,12 +13,12 @@ const authController = require('./controllers/auth-controller');
 // log to console
 app.use(morgan('dev'));
 
-mongoose.connect(configDatabase.database, {
-  useMongoClient: true,
-});
+// Make a mongoose connection to the mongo database
+app.use(database);
 
 app.use(passport.initialize());
-configPassport();
+app.use(configPassport);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 

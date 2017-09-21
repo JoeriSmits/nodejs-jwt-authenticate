@@ -5,7 +5,7 @@ const securityConfig = require('./security-config');
 
 const User = require('../models/user');
 
-module.exports = function() {
+module.exports = (req, res, next) => {
     const opts = {};
     opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
     opts.secretOrKey = securityConfig.jwtSecret;
@@ -16,4 +16,5 @@ module.exports = function() {
           return user ? done(null, user) : done(null, false);
         });
     }));
+    next();
 };
